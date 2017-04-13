@@ -22,8 +22,8 @@ vector<EPnode> solution;
 vector<EPnode> open;
 vector<EPnode> closed;
 vector<vector<int> > rules={{3,1},{-1,3,1},{-1,3},{-3,1,3},{-3,1,3,-1},{-3,-1,3},{-3,1},{-1,-3,1},{-1,-3}};
-// EPnode s={{2,8,3,1,6,4,7,0,5},7,NULL,0};
-EPnode s={{3,1,0,5,6,4,2,7,8},2,NULL,0};
+EPnode s={{2,8,3,1,6,4,7,0,5},7,NULL,0};
+// EPnode s={{3,1,0,5,6,4,2,7,8},2,NULL,0};
 //310564278
 EPnode goal{{1,2,3,8,0,4,7,6,5},4,NULL,0};
 
@@ -37,12 +37,16 @@ void swap(int&,int&);
 EPnode move(EPnode ,int);
 void expand(EPnode &);
 void result(EPnode *tnode);
+int anticlockwise(EPnode tnode);
+bool isSolved(EPnode&);
 
 int main(){
   expand(s);
 }
 
 void result(EPnode *tnode){
+  if(!isSolved(s))
+  return ;
 
   solution.push_back(*tnode);
   if(tnode->pnode==NULL){
@@ -127,4 +131,24 @@ bool find(EPnode tnode){
     }
   }
   return false;
+}
+
+bool isSolved(EPnode &tnode){
+  return anticlockwise(tnode)==anticlockwise(goal);
+}
+int anticlockwise(EPnode tnode){
+  int sum=0;
+  for(int i=0;i<N;++i){
+    if(tnode.position==i){
+      continue;
+    }
+    for(int j=0;j<i;++j){
+      if(tnode.position==i){
+        continue;
+      }
+      if(tnode.status[j]<tnode.status[i]){
+        ++sum;
+      }
+    }
+  }
 }
