@@ -22,9 +22,9 @@ vector<EPnode> solution;
 vector<EPnode> open;
 vector<EPnode> closed;
 vector<vector<int> > rules={{3,1},{-1,3,1},{-1,3},{-3,1,3},{-3,1,3,-1},{-3,-1,3},{-3,1},{-1,-3,1},{-1,-3}};
-EPnode s={{2,8,3,1,6,4,7,0,5},7,NULL,0};
+EPnode s={{2,8,3,1,6,4,5,0,7},7,NULL,0};
 // EPnode s={{3,1,0,5,6,4,2,7,8},2,NULL,0};
-//310564278
+// EPnode s={{4,6,3,8,5,0,2,7,1},5,NULL,0};
 EPnode goal{{1,2,3,8,0,4,7,6,5},4,NULL,0};
 
 
@@ -41,12 +41,17 @@ int anticlockwise(EPnode tnode);
 bool isSolved(EPnode&);
 
 int main(){
+  if(!isSolved(s)){
+    cout<<"another goal!\n";
+    goal={{1,2,3,4,5,6,7,8,0},8,NULL,0};
+  }
   expand(s);
+  cout<<open.size()<<"\n";
+  cout<<closed.size()<<"\n";
 }
 
 void result(EPnode *tnode){
-  if(!isSolved(s))
-  return ;
+
 
   solution.push_back(*tnode);
   if(tnode->pnode==NULL){
@@ -62,7 +67,6 @@ void expand(EPnode &tnode){
       cout<<*b<<"\n";
     }
     cout<<solution.size()<<"\n";
-    cout<<closed.size()<<std::endl;
     return;
   }
   closed.push_back(tnode);
@@ -134,7 +138,9 @@ bool find(EPnode tnode){
 }
 
 bool isSolved(EPnode &tnode){
-  return anticlockwise(tnode)==anticlockwise(goal);
+  cerr<<anticlockwise(tnode)<<"\n";
+  cerr<<anticlockwise(goal)<<"\n";
+  return anticlockwise(tnode)%2==anticlockwise(goal)%2;
 }
 int anticlockwise(EPnode tnode){
   int sum=0;
@@ -143,7 +149,7 @@ int anticlockwise(EPnode tnode){
       continue;
     }
     for(int j=0;j<i;++j){
-      if(tnode.position==i){
+      if(tnode.position==j){
         continue;
       }
       if(tnode.status[j]<tnode.status[i]){
@@ -151,4 +157,5 @@ int anticlockwise(EPnode tnode){
       }
     }
   }
+  return sum;
 }
